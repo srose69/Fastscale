@@ -1,28 +1,131 @@
-# Fastscale: Your Headscale VPN Server in Minutes.
+# Fastscale: Ваш VPN-сервер Headscale "под ключ" за 5 минут.
 
 [English](#english) | [Русский](#русский)
 
-A fully automated, interactive setup script for a self-hosted Headscale (Tailscale control server) instance. Get your own private, secure, and modern VPN up and running in minutes, without hunting through dozens of manuals.
+Интеллектуальный скрипт-установщик, который проведет вас через весь процесс развертывания Headscale — от установки зависимостей до готового к работе VPN с веб-интерфейсом и SSL.
+
+---
+<a name="russian"></a>
+<a name="русский"></a>
+
+## Возможности
+
+* **Полная автоматизация "под ключ"**: Скрипт не просто запускает контейнеры. Он устанавливает зависимости (Docker, Nginx, Certbot), проверяет и решает конфликты портов, генерирует все конфигурации и настраивает SSL.
+* **Интерактивный мастер настройки**: Забудьте о правке YAML-файлов. Скрипт в диалоговом режиме запрашивает только необходимую информацию (домен, email) и предлагает выбор компонентов.
+* **Безопасность по умолчанию**: Все сервисы (Headscale, UI) работают на `127.0.0.1` и доступны извне только через Nginx reverse proxy с обязательным SSL-шифрованием от Let's Encrypt.
+* **Готовая архитектура**:
+    * **Headscale**: Ядро системы, последняя версия.
+    * **headscale-admin (Опционально)**: Удобный веб-интерфейс для управления пользователями и устройствами, доступен по адресу `/admin`.
+    * **Nginx Reverse Proxy**: Автоматически настроенный Nginx для маршрутизации трафика и терминирования SSL.
+    * **Certbot**: Автоматическое получение и настройка бесплатных SSL-сертификатов.
+    * **tailscale-client**: Контейнер, который сразу подключает сам сервер к вашей новой VPN-сети.
+    * **nginx-ui (Опционально)**: Графический интерфейс для управления Nginx, доступен по адресу `/nginx-ui`.
+* **Удобство после установки**:
+    * Скрипт создает временный файл с API-ключом для первого входа в UI.
+    * Генерируется файл `headscale_credentials.txt` с итоговой инструкцией и ссылками.
+    * Отдельный скрипт `oidc_ru.sh` для легкой настройки входа через Google, GitHub и других OIDC-провайдеров уже после установки.
+* **Продуманная работа с системой**:
+    * Аккуратно работает с существующей установкой Nginx.
+    * Все файлы проекта изолированы в одной директории (`htscale`).
+    * Ведется подробный лог установки (`install_*.log`).
+
+## Какую проблему решает?
+
+Развертывание Headscale — это не просто `docker run`. Это сложный процесс, требующий:
+1.  Настроить Docker и Docker Compose.
+2.  Написать корректный `config.yaml` для Headscale.
+3.  Установить и настроить Nginx в качестве reverse proxy.
+4.  Правильно настроить SSL-сертификаты через Certbot.
+5.  Связать все это вместе, открыв нужные порты и обеспечив безопасность.
+
+**Fastscale автоматизирует все эти шаги.** Он заменяет десятки команд и часы чтения документации одним запуском скрипта. Вы отвечаете на несколько простых вопросов и получаете полностью готовый, безопасный и современный VPN-сервер.
+
+## Требования
+
+* Linux-сервер (рекомендуется Ubuntu 22.04+) с публичным IP-адресом.
+* Доменное имя (например, `vpn.yourcompany.com`), направленное на публичный IP вашего сервера.
+* `sudo` (root) доступ на сервере.
+
+## Быстрый старт
+
+1.  Склонируйте репозиторий на ваш сервер:
+    ```bash
+    git clone https://github.com/srose69/Fastscale
+    cd Fastscale
+    ```
+
+2.  Сделайте скрипты исполняемыми:
+    ```bash
+    chmod +x setup.sh oidc_ru.sh
+    ```
+
+3.  Запустите основной скрипт установки:
+    ```bash
+    sudo ./setup.sh
+    ```
+    Скрипт спросит ваш домен, email и какие опциональные компоненты вы хотите установить. Просто следуйте инструкциям.
+
+## Пост-установка: Финальные шаги
+
+После завершения скрипта `setup.sh` вся информация для начала работы будет сохранена в файле `headscale_credentials.txt`.
+
+1.  **Посмотрите инструкцию**: `sudo cat headscale_credentials.txt`. Там будут все ссылки и шаги.
+2.  **Получите API-ключ**: Для первого входа в веб-интерфейс вам понадобится временный ключ. Он находится в файле `htscale/API_DELETEME.KEY`. Посмотрите его командой:
+    ```bash
+    sudo cat htscale/API_DELETEME.KEY
+    ```
+3.  **Войдите в UI**: Перейдите по адресу `https://ваш.домен/admin/`, нажмите на иконку настроек (⚙️) и вставьте скопированный ключ.
+4.  **ВАЖНО! Удалите ключ**: После успешного входа обязательно удалите файл с ключом, чтобы он не оставался на сервере:
+    ```bash
+    sudo rm htscale/API_DELETEME.KEY
+    ```
+5.  **(Опционально) Настройте OIDC**: Чтобы включить вход через внешнего провайдера (Google, и т.д.), запустите второй скрипт и следуйте его инструкциям:
+    ```bash
+    sudo ./oidc_ru.sh
+    ```
 
 ---
 <a name="english"></a>
 
+# Fastscale: Your Turnkey Headscale VPN Server in Minutes.
+
+[English](#english) | [Русский](#русский)
+
+An intelligent setup script that guides you through the entire Headscale deployment process—from installing dependencies to a production-ready VPN with a web UI and SSL.
+
+---
+
 ## Features
 
-* **Interactive Guided Setup**: The script asks you simple questions and handles all the complex configuration for you.
-* **Headscale**: Deploys the latest version of the powerful open-source Tailscale control server.
-* **Web UI Included**: Comes with the popular `headscale-admin` UI out-of-the-box for easy management of users, nodes, and routes.
-* **Dockerized**: All services run in isolated Docker containers for clean and easy management.
-* **Nginx Reverse Proxy**: Automatically configures Nginx to handle traffic and route it to the appropriate services.
-* **Automatic SSL**: Provisions and configures free, trusted SSL certificates from Let's Encrypt (`certbot`).
-* **OIDC Post-Install Helper**: Includes a separate interactive script (`oidc.sh`) to easily configure OIDC authentication (e.g., "Sign in with Google") after the initial setup.
-* **Optional Nginx UI**: An option to also install `nginx-ui` for graphical management of Nginx configs.
+* **Turnkey Automation**: This isn't just a container launcher. The script installs dependencies (Docker, Nginx, Certbot), checks and resolves port conflicts, generates all configurations, and provisions SSL.
+* **Interactive Setup Wizard**: Forget editing YAML files. The script asks for essential information (your domain, email) in a simple Q&A format and lets you choose optional components.
+* **Secure by Default**: All services (Headscale, UI) listen on `127.0.0.1` and are exposed externally only through an Nginx reverse proxy with mandatory SSL encryption from Let's Encrypt.
+* **Complete Architecture**:
+    * **Headscale**: The latest version of the core control server.
+    * **headscale-admin (Optional)**: A user-friendly web UI for managing users and nodes, available at `/admin`.
+    * **Nginx Reverse Proxy**: Automatically configured to route traffic and terminate SSL.
+    * **Certbot**: For automatic fetching and renewal of free SSL certificates.
+    * **tailscale-client**: A container that immediately connects the host server to your new VPN network.
+    * **nginx-ui (Optional)**: A graphical interface for managing Nginx, available at `/nginx-ui`.
+* **Post-Install Convenience**:
+    * The script creates a temporary API key file for your first login to the web UI.
+    * It generates a `headscale_credentials.txt` file with final instructions and links.
+    * Includes a separate `oidc.sh` script to easily configure login via Google, GitHub, or other OIDC providers after the main setup.
+* **Smart System Integration**:
+    * Gracefully handles existing Nginx installations.
+    * All project files are isolated in a single directory (`htscale`).
+    * Maintains a detailed installation log (`install_*.log`).
 
 ## What Problem Does This Solve?
 
-Setting up a self-hosted VPN with all the modern features (like a control server, UI, OIDC, and SSL) is a complex task. It usually requires deep knowledge of Docker, Nginx, Linux networking, and reading multiple, often conflicting, guides.
+Deploying Headscale isn't just `docker run`. It's a complex process that requires you to:
+1.  Set up Docker and Docker Compose correctly.
+2.  Write a valid `config.yaml` for Headscale.
+3.  Install and configure Nginx as a reverse proxy.
+4.  Correctly set up SSL certificates via Certbot.
+5.  Tie it all together, open the right ports, and ensure it's secure.
 
-**Fastscale solves this.** It's a single, robust script that automates the entire process from start to finish. You provide your domain, and the script takes care of the rest, creating a production-ready, secure VPN server.
+**Fastscale automates all of this.** It replaces dozens of commands and hours of reading documentation with a single script execution. You answer a few simple questions and get a fully-featured, secure, and modern VPN server.
 
 ## Prerequisites
 
@@ -34,7 +137,7 @@ Setting up a self-hosted VPN with all the modern features (like a control server
 
 1.  Clone this repository onto your server:
     ```bash
-    git clone [https://github.com/srose69/Fastscale.git](https://github.com/srose69/Fastscale.git)
+    git clone https://github.com/srose69/Fastscale
     cd Fastscale
     ```
 
@@ -47,81 +150,23 @@ Setting up a self-hosted VPN with all the modern features (like a control server
     ```bash
     sudo ./setup.sh
     ```
-    The script will ask you for your domain, email, and which optional components you want to install. Just follow the prompts.
+    The script will ask for your domain, email, and which optional components you wish to install. Just follow the prompts.
 
 ## Post-Installation: Final Steps
 
-After the main script finishes, your Headscale server will be running.
+After the `setup.sh` script finishes, all the information you need to get started is saved in the `headscale_credentials.txt` file.
 
-1.  **Get Your Admin API Key**: The script will create a file named `API_DELETEME.KEY`. This key is used to log in to the `headscale-admin` UI. View it with `sudo cat API_DELETEME.KEY`.
-2.  **Log in to the UI**: Go to `https://your.domain.com/admin/`, click the settings icon (⚙️), and enter the API key.
-3.  **(Optional) Configure OIDC**: To enable login via Google or another OIDC provider, run the post-installation script:
+1.  **Read the Instructions**: `sudo cat headscale_credentials.txt`. It contains all your links and next steps.
+2.  **Get the API Key**: For your first login to the web UI, you'll need a temporary key located in `htscale/API_DELETEME.KEY`. View it with:
+    ```bash
+    sudo cat htscale/API_DELETEME.KEY
+    ```
+3.  **Log in to the UI**: Navigate to `https://your.domain.com/admin/`, click the settings icon (⚙️), and paste the API key.
+4.  **IMPORTANT! Delete the Key**: After logging in successfully, you must delete the key file so it doesn't remain on the server:
+    ```bash
+    sudo rm htscale/API_DELETEME.KEY
+    ```
+5.  **(Optional) Configure OIDC**: To enable login via an external provider (like Google), run the second script and follow its prompts:
     ```bash
     sudo ./oidc.sh
     ```
-    This helper script will ask you for your OIDC provider's details (Client ID, Secret, etc.) and automatically update the Headscale configuration.
-
----
-<a name="русский"></a>
-
-# Fastscale: Ваш VPN-сервер Headscale за 5 минут.
-
-[English](#english) | [Русский](#русский)
-
-Полностью автоматизированный интерактивный скрипт для развертывания вашего собственного VPN-сервера на базе Headscale (open-source аналог Tailscale). Запустите свою приватную, безопасную и современную VPN-сеть за считанные минуты, не изучая десятки мануалов.
-
----
-
-## Возможности
-
-* **Интерактивная установка**: Скрипт задает простые вопросы и сам справляется со всей сложной настройкой.
-* **Headscale**: Разворачивает последнюю версию мощного open-source сервера управления Tailscale.
-* **Веб-интерфейс в комплекте**: Поставляется с популярным UI `headscale-admin` для удобного управления пользователями, устройствами и маршрутами.
-* **Все в Docker**: Сервисы работают в изолированных Docker-контейнерах, что обеспечивает чистоту системы и простоту управления.
-* **Nginx Reverse Proxy**: Автоматически настраивает Nginx для обработки трафика и маршрутизации к нужным сервисам.
-* **Автоматический SSL**: Получает и настраивает бесплатные, доверенные SSL-сертификаты от Let's Encrypt (`certbot`).
-* **Помощник настройки OIDC**: Включает отдельный интерактивный скрипт (`oidc_ru.sh`) для легкой настройки входа через OIDC (например, "Войти через Google") после основной установки.
-* **Опциональный Nginx UI**: Возможность дополнительно установить `nginx-ui` для графического управления конфигурациями Nginx.
-
-## Какую проблему решает?
-
-Настройка собственного VPN-сервера со всеми современными функциями (сервер управления, UI, OIDC, SSL) — сложная задача. Она требует глубоких знаний Docker, Nginx, сетевых настроек Linux и изучения множества, часто противоречащих друг другу, руководств.
-
-**Fastscale решает эту проблему.** Это единый, надежный скрипт, который автоматизирует весь процесс от начала до конца. Вы указываете свой домен, а скрипт берет на себя все остальное, создавая готовый к работе и безопасный VPN-сервер.
-
-## Требования
-
-* Linux-сервер (рекомендуется Ubuntu 22.04+) с публичным IP-адресом.
-* Доменное имя (например, `vpn.yourcompany.com`), направленное на публичный IP вашего сервера.
-* `sudo` (root) доступ на сервере.
-
-## Быстрый старт
-
-1.  Склонируйте репозиторий на ваш сервер:
-    ```bash
-    git clone [https://github.com/srose69/Fastscale.git](https://github.com/srose69/Fastscale.git)
-    cd Fastscale
-    ```
-
-2.  Сделайте скрипты исполняемыми:
-    ```bash
-    chmod +x setup_ru.sh oidc_ru.sh
-    ```
-
-3.  Запустите основной скрипт установки:
-    ```bash
-    sudo ./setup_ru.sh
-    ```
-    Скрипт спросит ваш домен, email и какие опциональные компоненты вы хотите установить. Просто следуйте инструкциям.
-
-## Пост-установка: Финальные шаги
-
-После завершения основного скрипта ваш сервер Headscale будет запущен.
-
-1.  **Получите API ключ администратора**: Скрипт создаст файл `API_DELETEME.KEY`. Этот ключ используется для входа в UI `headscale-admin`. Посмотрите его командой `sudo cat API_DELETEME.KEY`.
-2.  **Войдите в UI**: Перейдите по адресу `https://your.domain.com/admin/`, нажмите на кнопку настроек и введите API ключ.
-3.  **(Опционально) Настройте OIDC**: Чтобы включить вход через Google или другого OIDC-провайдера, запустите скрипт пост-настройки:
-    ```bash
-    sudo ./oidc_ru.sh
-    ```
-    Этот скрипт-помощник запросит данные вашего OIDC-провайдера (Client ID, Secret и т.д.) и автоматически обновит конфигурацию Headscale.
