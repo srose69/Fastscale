@@ -291,7 +291,7 @@ EOF
     if [ "$ACTIVATE_HEADSCALE_ADMIN" = true ]; then
         cat >> "${NGINX_CONF}" <<EOF
     location /admin/ {
-        proxy_pass http://127.0.0.1:${PORTS[HEADSCALE_ADMIN]}/;
+        proxy_pass http://127.0.0.1:${PORTS[HEADSCALE_ADMIN]};
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
