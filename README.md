@@ -1,6 +1,6 @@
 # Fastscale: Your Headscale VPN Server in Minutes.
 
-[English](#english)
+[English](#english) | [Русский](#русский)
 
 A fully automated, interactive setup script for a self-hosted Headscale (Tailscale control server) instance. Get your own private, secure, and modern VPN up and running in minutes, without hunting through dozens of manuals.
 
@@ -66,7 +66,7 @@ After the main script finishes, your Headscale server will be running.
 
 # Fastscale: Ваш VPN-сервер Headscale за 5 минут.
 
-[Русский](#русский)
+[English](#english) | [Русский](#русский)
 
 Полностью автоматизированный интерактивный скрипт для развертывания вашего собственного VPN-сервера на базе Headscale (open-source аналог Tailscale). Запустите свою приватную, безопасную и современную VPN-сеть за считанные минуты, не изучая десятки мануалов.
 
