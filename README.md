@@ -1,4 +1,4 @@
-# Fastscale: Ваш VPN-сервер Headscale "под ключ" за 5 минут.
+# Fastscale: Ваш сервер Headscale "под ключ" за 5 минут.
 
 [English](#english) | [Русский](#русский)
 
