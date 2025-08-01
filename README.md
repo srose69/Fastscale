@@ -34,7 +34,7 @@ Setting up a self-hosted VPN with all the modern features (like a control server
 
 1.  Clone this repository onto your server:
     ```bash
-    git clone [https://github.com/your-username/Fastscale.git](https://github.com/your-username/Fastscale.git)
+    git clone [https://github.com/srose69/Fastscale.git](https://github.com/srose69/Fastscale.git)
     cd Fastscale
     ```
 
@@ -53,7 +53,7 @@ Setting up a self-hosted VPN with all the modern features (like a control server
 
 After the main script finishes, your Headscale server will be running.
 
-1.  **Get Your Admin API Key**: The script will create a file named `API_DELETEME_your.domain.com.KEY`. This key is used to log in to the `headscale-admin` UI. View it with `sudo cat API_DELETEME_...KEY`.
+1.  **Get Your Admin API Key**: The script will create a file named `API_DELETEME.KEY`. This key is used to log in to the `headscale-admin` UI. View it with `sudo cat API_DELETEME.KEY`.
 2.  **Log in to the UI**: Go to `https://your.domain.com/admin/`, click the settings icon (⚙️), and enter the API key.
 3.  **(Optional) Configure OIDC**: To enable login via Google or another OIDC provider, run the post-installation script:
     ```bash
@@ -99,7 +99,7 @@ After the main script finishes, your Headscale server will be running.
 
 1.  Склонируйте репозиторий на ваш сервер:
     ```bash
-    git clone [https://github.com/your-username/Fastscale.git](https://github.com/your-username/Fastscale.git)
+    git clone [https://github.com/srose69/Fastscale.git](https://github.com/srose69/Fastscale.git)
     cd Fastscale
     ```
 
@@ -118,7 +118,7 @@ After the main script finishes, your Headscale server will be running.
 
 После завершения основного скрипта ваш сервер Headscale будет запущен.
 
-1.  **Получите API ключ администратора**: Скрипт создаст файл `API_DELETEME_your.domain.com.KEY`. Этот ключ используется для входа в UI `headscale-admin`. Посмотрите его командой `sudo cat API_DELETEME_...KEY`.
+1.  **Получите API ключ администратора**: Скрипт создаст файл `API_DELETEME.KEY`. Этот ключ используется для входа в UI `headscale-admin`. Посмотрите его командой `sudo cat API_DELETEME.KEY`.
 2.  **Войдите в UI**: Перейдите по адресу `https://your.domain.com/admin/`, нажмите на кнопку настроек и введите API ключ.
 3.  **(Опционально) Настройте OIDC**: Чтобы включить вход через Google или другого OIDC-провайдера, запустите скрипт пост-настройки:
     ```bash
